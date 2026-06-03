@@ -409,6 +409,7 @@ export default function Portfolio() {
                   scale: 1,
                   rotateX: 0,
                   rotateZ: 0,
+                  opacity: 1,
                   duration: SEG,
                 },
                 t(i - 1)
@@ -421,6 +422,7 @@ export default function Portfolio() {
                   y: i * LAYER - stepIn(),
                   rotateX: ROTX,
                   rotateZ: i % 2 ? -ROT_Z : ROT_Z,
+                  opacity: 0.7,
                   duration: SEG * 0.45,
                 },
                 t(i)
@@ -430,7 +432,7 @@ export default function Portfolio() {
                 card,
                 {
                   y: i * LAYER - (stepIn() + stepOut()),
-                  opacity: 0.98,
+                  opacity: 0.45,
                   duration: SEG * 0.55,
                 },
                 t(i) + SEG * 0.45
@@ -488,12 +490,6 @@ export default function Portfolio() {
               </header>
 
               <div className="pf-card-body">
-                {p.caseTitle && (
-                  <div className="pf-case-title">
-                    <span className="pf-section-label">📌 案例标题</span>
-                    <span className="pf-section-text">{p.caseTitle}</span>
-                  </div>
-                )}
                 {p.desc && (
                   <div className="pf-copy">
                     <span className="pf-section-label">📝 案例简介</span>
@@ -503,6 +499,12 @@ export default function Portfolio() {
                 {!p.desc && p.copy && (
                   <div className="pf-copy">
                     <span className="pf-section-text">{p.copy}</span>
+                  </div>
+                )}
+                {p.result && (
+                  <div className="pf-result">
+                    <span className="pf-section-label">🏆 核心成果</span>
+                    <span className="pf-section-text">{p.result}</span>
                   </div>
                 )}
               </div>
@@ -527,28 +529,6 @@ export default function Portfolio() {
                     <span className="pf-channel-tag">{p.linkLabel}</span>
                   )}
                 </div>
-
-                {!p.video && !p.images && !p.tools && (
-                  <div className="pf-demo">
-                    {p.icon && (
-                      <img className="pf-demo-icon" src={p.icon} alt="" />
-                    )}
-                    <p className="pf-demo-result">{p.result}</p>
-                  </div>
-                )}
-
-                {p.video && (
-                  <div className="pf-result-tag">
-                    <span className="pf-section-label">🏆 核心成果</span>
-                    <span className="pf-section-text">{p.result}</span>
-                  </div>
-                )}
-                {!p.video && p.images && (
-                  <div className="pf-result-tag">
-                    <span className="pf-section-label">🏆 核心成果</span>
-                    <span className="pf-section-text">{p.result}</span>
-                  </div>
-                )}
               </div>
             </div>
 
