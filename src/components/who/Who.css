@@ -1,0 +1,262 @@
+/* ========= Base ========= */
+.who-wrap {
+  position: relative;
+  width: 100%;
+  background: #0d0d0d;
+  color: #fff;
+  overscroll-behavior-y: contain;
+}
+.who-sticky {
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  overflow: hidden;
+}
+.who-track {
+  height: 100%;
+  display: flex;
+  flex-flow: row nowrap;
+  align-items: stretch;
+  will-change: transform;
+}
+
+:root {
+  --who-pad: clamp(28px, 9vw, 110px);
+  --who-vpad: clamp(48px, 12vh, 180px);
+  --who-maxw: 48ch;
+}
+
+.panel {
+  position: relative;
+  flex: 0 0 100vw;
+  width: 100vw;
+  height: 100%;
+  display: grid;
+  place-items: center;
+  background: transparent;
+  box-sizing: border-box;
+  overflow: hidden;
+}
+.panel:not(.hero) {
+  padding-top: 0;
+  padding-bottom: 0;
+}
+
+.panel.hero {
+  padding: 0;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+}
+.who-svg {
+  width: min(92vw, 1200px);
+  height: auto;
+  display: block;
+  margin: 0 auto;
+  color: #fff;
+}
+.who-svg text {
+  text-rendering: geometricPrecision;
+}
+
+/* ========= Typography ========= */
+.panel-copy {
+  display: grid;
+  gap: clamp(14px, 2.6vw, 28px);
+  max-width: var(--who-maxw);
+  text-align: left;
+  align-items: center;
+  transform: translateY(-6vh);
+  padding-left: max(var(--who-pad), env(safe-area-inset-left));
+  padding-right: max(var(--who-pad), env(safe-area-inset-right));
+}
+
+.panel-hl {
+  margin: 0 0 8px;
+  font-weight: 900;
+  line-height: 1.1;
+  letter-spacing: -0.012em;
+  font-size: clamp(24px, 4.5vw, 46px);
+}
+.panel-sl {
+  margin: 0;
+  line-height: 1.6;
+  font-size: clamp(16px, 3.2vw, 28px);
+  opacity: 0.97;
+}
+.panel-sl .brand {
+  font-weight: 700;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.panel-copy::before {
+  content: "";
+  width: clamp(28px, 5vw, 56px);
+  height: 3px;
+  background: currentColor;
+  opacity: 0.45;
+  display: block;
+  margin-bottom: clamp(10px, 1.4vw, 14px);
+}
+
+.p1 .panel-hl {
+  font-family: "Archivo Black", "Noto Sans SC", system-ui, sans-serif;
+}
+.p1 .panel-sl {
+  font-family: "Space Grotesk", "Noto Sans SC", ui-sans-serif, system-ui, sans-serif;
+}
+
+.p2 .panel-hl {
+  font-family: "Teko", "Noto Sans SC", system-ui, sans-serif;
+  font-weight: 900;
+  letter-spacing: 0;
+}
+.p2 .panel-sl {
+  font-family: "IBM Plex Mono", "Noto Sans SC", ui-monospace, SFMono-Regular, Menlo, monospace;
+}
+
+.p3 .panel-hl {
+  font-family: "Fraunces", "Noto Sans SC", serif;
+  font-weight: 900;
+  letter-spacing: -0.015em;
+}
+.p3 .panel-sl {
+  font-family: "Space Grotesk", "Noto Sans SC", ui-sans-serif, system-ui, sans-serif;
+}
+
+@media (min-width: 900px) {
+  .panel-copy { max-width: 54ch; }
+}
+@media (max-width: 420px) {
+  .panel-copy { transform: translateY(-3vh); }
+}
+@supports (text-wrap: balance) {
+  .panel-sl { text-wrap: balance; }
+}
+
+/* ========= Stickers ========= */
+.stickers {
+  position: absolute;
+  display: flex;
+  align-items: center;
+  inset: auto 0 clamp(20px, 6vh, 60px) 0;
+  height: 30vh;
+  pointer-events: none;
+  z-index: 1;
+  contain: layout;
+  overflow: visible;
+  backface-visibility: hidden;
+}
+.p2 .stickers {
+  inset: auto 0 clamp(28px, 8vh, 80px) 0;
+  height: 44vh;
+}
+
+.who-wrap.is-scrolling .sticker {
+  filter: none;
+}
+
+@media (max-width: 768px) {
+  .who-wrap.is-scrolling .sticker {
+    filter: none;
+  }
+}
+.panel-copy {
+  z-index: 2;
+}
+
+/* Sticker base style */
+.sticker {
+  border-radius: 16px;
+  opacity: 0.75;
+}
+
+.p1 .sticker.s1 {
+  right: 8vw; bottom: 8vh; width: min(28vw, 260px); height: min(28vw, 260px);
+}
+.p1 .sticker.s2 {
+  right: 20vw; bottom: 2vh; width: min(36vw, 320px); height: min(36vw, 320px);
+}
+
+.p2 .stickers {
+  position: absolute;
+  inset: clamp(12vh,14vh,18vh) 0 auto 0;
+  height: auto;
+  min-height: 56vh;
+  overflow: visible;
+  contain: layout;
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  grid-template-rows: auto auto;
+  justify-items: center;
+  align-items: start;
+  gap: clamp(18px, 6vw, 80px);
+  pointer-events: none;
+  z-index: 1;
+  backface-visibility: hidden;
+}
+
+@media (min-width: 1024px) {
+  .p1 .stickers {
+    left: 50%;
+    right: auto;
+    transform: translateX(-50%);
+    width: min(60vw, 1000px);
+    justify-content: center;
+    align-items: flex-end;
+    gap: clamp(18px, 4vw, 64px);
+  }
+  .p1 .sticker {
+    position: static;
+  }
+  .p1 .sticker.s1 { width: min(18vw, 220px); height: min(18vw, 220px); }
+  .p1 .sticker.s2 { width: min(22vw, 260px); height: min(22vw, 260px); }
+}
+
+.p2 .panel-copy { z-index: 2; }
+.p2 .sticker { position: static; }
+.p2 .sticker.s1 { grid-column: 1; grid-row: 1; width: min(22vw, 200px); height: min(22vw, 200px); margin-top: 20px; }
+.p2 .sticker.s2 { grid-column: 2; grid-row: 1; width: min(20vw, 180px); height: min(20vw, 180px); margin-top: clamp(8px, 2vh, 28px); }
+.p2 .sticker.s3 { margin-top: clamp(24px, 7vh, 88px); width: min(24vw, 220px); height: min(24vw, 220px); }
+
+@media (max-width: 768px){
+  .p2 .sticker.s3{ width: min(46vw, 280px); height: min(46vw, 280px); }
+}
+
+.panel.p2 { overflow: visible; }
+
+@media (min-width: 1024px) {
+  .p2 .stickers {
+    inset: clamp(8vh, 10vh, 12vh) 0 auto 0;
+    min-height: 100vh;
+  }
+}
+
+.panel.p3 {
+  overflow: visible;
+  min-height: 100vh;
+}
+
+.p3 .stickers {
+  position: absolute;
+  inset: 0;
+  min-height: 100vh;
+  height: auto;
+  pointer-events: none;
+}
+
+.p3 .sticker {
+  position: absolute;
+  will-change: transform;
+}
+
+.p3 .sticker.s1 { left: 16vw; bottom: 10vh; width: min(40vw, 240px); height: min(40vw, 240px); }
+.p3 .sticker.s2 { left: 52vw; top: 12vh; width: min(22vw, 220px); height: min(22vw, 220px); }
+.p3 .sticker.s3 { right: 10vw; bottom: 8vh; width: min(18vw, 140px); height: auto; aspect-ratio: auto; }
+
+@media (max-width: 768px) {
+  .p3 .sticker.s1 { left: 10vw; }
+  .p3 .sticker.s2 { left: 44vw; top: 10vh; width: min(34vw, 200px); height: min(34vw, 200px); }
+  .p3 .sticker.s3 { right: 5vw; bottom: 6vh; }
+}
