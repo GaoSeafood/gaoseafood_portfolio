@@ -255,7 +255,7 @@ function SwipeableCarousel({ items, type = "image" }) {
           {items.map((item, i) => (
             <div key={i} className={`pf-carousel-slide${type === "tool" ? " pf-tool-slide" : ""}`}>
               {type === "image" ? (
-                <img src={item} alt="" loading="lazy" decoding="async" />
+                <img src={item} alt="" />
               ) : (
                 <>
                   <img src={item.icon} alt="" />

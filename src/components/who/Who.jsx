@@ -439,8 +439,8 @@ export default function Who() {
               </p>
             </div>
             <div className="stickers">
-              <img className="sticker s1" alt="" src={claude} loading="lazy" decoding="async" />
-              <img className="sticker s2" alt="" src={robot} loading="lazy" decoding="async" />
+              <img className="sticker s1" alt="" src={claude} />
+              <img className="sticker s2" alt="" src={robot} />
             </div>
           </section>
 
@@ -453,9 +453,9 @@ export default function Who() {
               </p>
             </div>
             <div className="stickers">
-              <img className="sticker s1" alt="" src={aftereffects} loading="lazy" decoding="async" />
-              <img className="sticker s2" alt="" src={capcut} loading="lazy" decoding="async" />
-              <img className="sticker s3" alt="" src={jimeng} loading="lazy" decoding="async" />
+              <img className="sticker s1" alt="" src={aftereffects} />
+              <img className="sticker s2" alt="" src={capcut} />
+              <img className="sticker s3" alt="" src={jimeng} />
             </div>
           </section>
 
@@ -468,9 +468,9 @@ export default function Who() {
               </p>
             </div>
             <div className="stickers">
-              <img className="sticker s1" alt="" src={openai} loading="lazy" decoding="async" />
-              <img className="sticker s2" alt="" src={tiktok} loading="lazy" decoding="async" />
-              <img className="sticker s3" alt="" src={orientalpearl} loading="lazy" decoding="async" />
+              <img className="sticker s1" alt="" src={openai} />
+              <img className="sticker s2" alt="" src={tiktok} />
+              <img className="sticker s3" alt="" src={orientalpearl} />
             </div>
           </section>
         </div>
