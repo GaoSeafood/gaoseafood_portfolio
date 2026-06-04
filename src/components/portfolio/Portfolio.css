@@ -601,6 +601,122 @@ a.pf-channel-link {
 }
 
 /* =========================
+   NAV HOVER ZONE
+   ========================= */
+.pf-nav-zone {
+  position: fixed;
+  left: 0;
+  top: 0;
+  width: clamp(40px, 5vw, 60px);
+  height: 100vh;
+  z-index: 9;
+  cursor: default;
+}
+/* =========================
+   CARD NAVIGATOR
+   ========================= */
+.pf-nav {
+  position: fixed;
+  left: clamp(6px, 2vw, 24px);
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 9;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: clamp(6px, 1.2vh, 10px);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s ease;
+}
+.pf-nav.visible {
+  opacity: 1;
+  pointer-events: auto;
+}
+.pf-nav-hit {
+  position: relative;
+  width: 24px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+.pf-nav-line {
+  width: 3px;
+  height: 12px;
+  border-radius: 2px;
+  background: rgba(255, 255, 255, 0.2);
+  transition: height 0.2s ease, background 0.2s ease, width 0.2s ease;
+}
+.pf-nav-line.active {
+  width: 4px;
+  height: 22px;
+  background: rgba(255, 255, 255, 0.7);
+}
+.pf-nav-hit:hover .pf-nav-line {
+  width: 6px;
+  height: 28px;
+  border-radius: 3px;
+  background: rgba(255, 255, 255, 0.5);
+}
+.pf-nav-hit:hover .pf-nav-line.active {
+  width: 7px;
+  background: rgba(255, 255, 255, 0.9);
+}
+.pf-nav-tooltip {
+  position: absolute;
+  left: calc(100% + 10px);
+  top: 50%;
+  transform: translateY(-50%);
+  white-space: nowrap;
+  padding: 6px 12px;
+  border-radius: 6px;
+  background: rgba(255, 255, 255, 0.15);
+  color: #fff;
+  font-size: 12px;
+  font-weight: 600;
+  line-height: 1.3;
+  pointer-events: none;
+  animation: nav-tip-in 0.12s ease;
+  z-index: 1;
+}
+@keyframes nav-tip-in {
+  from { opacity: 0; transform: translateY(-50%) translateX(-4px); }
+  to { opacity: 1; transform: translateY(-50%) translateX(0); }
+}
+@media (max-width: 767px) {
+  .pf-nav {
+    left: 3px;
+    gap: 5px;
+  }
+  .pf-nav-hit {
+    width: 20px;
+    height: 20px;
+  }
+  .pf-nav-line {
+    width: 2px;
+    height: 10px;
+  }
+  .pf-nav-line.active {
+    width: 3px;
+    height: 18px;
+  }
+  .pf-nav-hit:hover .pf-nav-line {
+    width: 5px;
+    height: 24px;
+    border-radius: 2px;
+  }
+  .pf-nav-hit:hover .pf-nav-line.active {
+    width: 6px;
+  }
+  .pf-nav-tooltip {
+    font-size: 10px;
+    padding: 4px 8px;
+  }
+}
+
+/* =========================
    SCROLL HINT
    ========================= */
 .pf-scroll-hint {

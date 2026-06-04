@@ -134,7 +134,7 @@ const PROJECTS = [
   {
     id: 9,
     title: "彩贝壳亲子游推文营销，转化50+位中产家长",
-    icon: caibeikeIcon,
+    icon: null,
     caseTitle: "精算型parental营销：把「玩泥巴」包装成「自然课堂」的高转化推文策划",
     desc: "负责面向「江浙沪中产父母」的亲子短途游产品推文。精准洞察受众「既要性价比与省心、又要教育意义、还要朋友圈人设」的痛点。标题以「避暑痛点+极低价拳头产品」强吸睛；正文采用模块化结构，将非遗、大巴接送等亮点标签化前置。通过场景化文案，将「玩泥巴/玩水」逆向包装为「农夫大作战/野外生存课堂」，精准贩卖教育与情绪体验。",
     result: "高质阅读：推文精准触达垂直亲子圈层，单篇阅读量突破7000+。精准转化：深度触动家长痛点，成功逆向拉动50+位中产家长高意向咨询。",
@@ -144,6 +144,13 @@ const PROJECTS = [
     images: [caibeike1, caibeike2],
   },
 ];
+
+const PIN_FACTOR = 1.6;
+
+const getAbbr = (title) => {
+  const i = title.indexOf("，");
+  return i > -1 ? title.slice(0, i) : title;
+};
 
 /* ---------- SWIPEABLE CAROUSEL ---------- */
 function SwipeableCarousel({ items, type = "image" }) {
@@ -292,9 +299,122 @@ function SwipeableCarousel({ items, type = "image" }) {
   );
 }
 
+/* ---------- CARD NAVIGATOR ---------- */
+function CardNav({ currentIdx, titles, onSelect, visible }) {
+  const [hovered, setHovered] = useState(null);
+
+  return (
+    <div className={`pf-nav${visible ? " visible" : ""}`}>
+      {titles.map((t, i) => (
+        <div
+          key={i}
+          className="pf-nav-hit"
+          onMouseEnter={() => setHovered(i)}
+          onMouseLeave={() => setHovered(null)}
+        >
+          <div
+            className={`pf-nav-line${i === currentIdx ? " active" : ""}`}
+            onClick={() => onSelect(i)}
+          />
+          {hovered === i && <span className="pf-nav-tooltip">{getAbbr(t)}</span>}
+        </div>
+      ))}
+    </div>
+  );
+}
+
 export default function Portfolio() {
   const rootRef = useRef(null);
   const stageRef = useRef(null);
+  const [currentIdx, setCurrentIdx] = useState(0);
+  const [navVisible, setNavVisible] = useState(false);
+  const [inPortfolio, setInPortfolio] = useState(false);
+  const navTimerRef = useRef(null);
+  const frontRef = useRef(0);
+  const stRef = useRef(null);
+  const cooldownRef = useRef(false);
+  const cooldownTimerRef = useRef(null);
+
+  const showNav = useCallback(() => {
+    if (!inPortfolio) return;
+    setNavVisible(true);
+    clearTimeout(navTimerRef.current);
+    navTimerRef.current = setTimeout(() => setNavVisible(false), 1500);
+  }, [inPortfolio]);
+
+  const scrollToCard = useCallback((idx) => {
+    const st = stRef.current;
+    const stage = stageRef.current;
+    if (!st || !stage) return;
+    const H = stage.clientHeight;
+    const target = st.start + idx * H * PIN_FACTOR;
+    window.scroll(0, target);
+    setNavVisible(false);
+    clearTimeout(navTimerRef.current);
+  }, []);
+
+  useEffect(() => {
+    const onWheel = () => showNav();
+    window.addEventListener("wheel", onWheel, { passive: true });
+    window.addEventListener("touchmove", onWheel, { passive: true });
+    return () => {
+      window.removeEventListener("wheel", onWheel);
+      window.removeEventListener("touchmove", onWheel);
+      clearTimeout(navTimerRef.current);
+    };
+  }, [showNav]);
+
+  useEffect(() => {
+    const stage = stageRef.current;
+    if (!stage) return;
+
+    const handleWheel = (e) => {
+      if (!inPortfolio) return;
+      if (cooldownRef.current) { e.preventDefault(); return; }
+
+      const st = stRef.current;
+      if (!st) return;
+      const H = stage.clientHeight;
+      const step = H * PIN_FACTOR;
+
+      const dir = e.deltaY > 0 ? 1 : -1;
+      if (dir > 0 && frontRef.current >= PROJECTS.length - 1) return;
+      if (dir < 0 && frontRef.current <= 0) return;
+      if (window.scrollY < st.start - H * 0.2 || window.scrollY > st.end + H * 0.2) return;
+      const entryEnd = st.start + step * 0.25;
+      if (dir > 0 && window.scrollY < entryEnd) return;
+
+      e.preventDefault();
+      showNav();
+
+      cooldownRef.current = true;
+      clearTimeout(cooldownTimerRef.current);
+      cooldownTimerRef.current = setTimeout(() => { cooldownRef.current = false; }, 1600);
+
+      const newIdx = frontRef.current + dir;
+      frontRef.current = newIdx;
+      setCurrentIdx(newIdx);
+      window.scroll(0, st.start + newIdx * step);
+    };
+
+    window.addEventListener("wheel", handleWheel, { passive: false });
+    return () => {
+      window.removeEventListener("wheel", handleWheel);
+      clearTimeout(cooldownTimerRef.current);
+      cooldownRef.current = false;
+    };
+  }, [inPortfolio, showNav]);
+
+  useEffect(() => {
+    const el = rootRef.current;
+    if (!el) return;
+    const observer = new IntersectionObserver(
+      ([entry]) => setInPortfolio(entry.isIntersecting),
+      { threshold: 0 }
+    );
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, []);
 
   useLayoutEffect(() => {
     const root = rootRef.current;
@@ -333,8 +453,7 @@ export default function Portfolio() {
         ROT_X_MOB = 12,
         ROT_Z = 3.5,
         LIFT_IN_VH = 0.12,
-        LIFT_OUT_VH = 0.7,
-        PIN_FACTOR = 1.6;
+        LIFT_OUT_VH = 1.0;
 
       const mm = gsap.matchMedia();
       mm.add(
@@ -367,7 +486,7 @@ export default function Portfolio() {
           });
 
           const stepIn = () => H() * (mq.conditions.mobile ? 0.14 : LIFT_IN_VH);
-          const stepOut = () => H() * (mq.conditions.mobile ? 0.78 : LIFT_OUT_VH);
+          const stepOut = () => H() * (mq.conditions.mobile ? 1.0 : LIFT_OUT_VH);
           const SEG = 1;
           const t = (i) => i * SEG;
 
@@ -377,6 +496,8 @@ export default function Portfolio() {
             });
           }
           setFront(0);
+          frontRef.current = 0;
+          setCurrentIdx(0);
 
           const tl = gsap.timeline({
             defaults: { ease: "none" },
@@ -386,18 +507,27 @@ export default function Portfolio() {
               pinReparent: true,
               start: "top top",
               end: () => "+=" + (cards.length - 1) * H() * PIN_FACTOR,
-              scrub: mq.conditions.mobile ? 0.25 : true,
+              scrub: 1.5,
               anticipatePin: mq.conditions.mobile ? 2 : 1,
               invalidateOnRefresh: true,
+              snap: {
+                snapTo: (v) => Math.round(v * (cards.length - 1)) / (cards.length - 1),
+                duration: 0.4,
+              },
             },
             onUpdate: () => {
               const newFront = Math.min(
                 cards.length - 1,
                 Math.max(0, Math.round(tl.time() / SEG))
               );
+              if (frontRef.current !== newFront) {
+                frontRef.current = newFront;
+                setCurrentIdx(newFront);
+              }
               setFront(newFront);
             },
           });
+          stRef.current = tl.scrollTrigger;
 
           cards.forEach((card, i) => {
             if (i > 0) {
@@ -439,7 +569,10 @@ export default function Portfolio() {
             }
           });
 
-          return () => tl.kill();
+          return () => {
+            tl.kill();
+            stRef.current = null;
+          };
         }
       );
 
@@ -562,7 +695,17 @@ export default function Portfolio() {
           </article>
         ))}
       </div>
-      <div className="pf-scroll-hint" onClick={() => document.getElementById('site-footer')?.scrollIntoView({ behavior: 'smooth' })}>
+      <div className="pf-nav-zone" onMouseEnter={() => showNav()} />
+      <CardNav
+        currentIdx={currentIdx}
+        titles={PROJECTS.map((p) => p.title)}
+        onSelect={scrollToCard}
+        visible={navVisible && inPortfolio}
+      />
+      <div className="pf-scroll-hint" onClick={() => {
+        const reveal = document.querySelector(".footer-reveal");
+        if (reveal) window.scrollTo({ top: reveal.offsetTop, behavior: "smooth" });
+      }}>
         <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
           <path d="M6 9l6 6 6-6"/>
         </svg>
