@@ -389,7 +389,7 @@ export default function Portfolio() {
 
       cooldownRef.current = true;
       clearTimeout(cooldownTimerRef.current);
-      cooldownTimerRef.current = setTimeout(() => { cooldownRef.current = false; }, 1600);
+      cooldownTimerRef.current = setTimeout(() => { cooldownRef.current = false; }, 800);
 
       const newIdx = frontRef.current + dir;
       frontRef.current = newIdx;
@@ -507,12 +507,12 @@ export default function Portfolio() {
               pinReparent: true,
               start: "top top",
               end: () => "+=" + (cards.length - 1) * H() * PIN_FACTOR,
-              scrub: 1.5,
+              scrub: 0.6,
               anticipatePin: mq.conditions.mobile ? 2 : 1,
               invalidateOnRefresh: true,
               snap: {
                 snapTo: (v) => Math.round(v * (cards.length - 1)) / (cards.length - 1),
-                duration: 0.4,
+                duration: 0.2,
               },
             },
             onUpdate: () => {
