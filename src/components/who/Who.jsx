@@ -432,11 +432,10 @@ export default function Who() {
 
           <section className="panel p1">
             <div className="panel-copy">
-              <h2 className="panel-hl">一半是视频导演，<br />一半是情绪解构者</h2>
+              <h2 className="panel-hl">一半是视频编导，<br />一半是AI极客</h2>
               <p className="panel-sl">
-                用反差叙事击碎刻板印象
-                <br />将凌乱素材转化为直击人心的爆款结构
-                <br />让用户自发共鸣
+                用内容策划，帮助品牌扩大营销声量
+                <br />用AI工具，帮助公司降本增效
               </p>
             </div>
             <div className="stickers">
@@ -447,10 +446,10 @@ export default function Who() {
 
           <section className="panel p2">
             <div className="panel-copy">
-              <h2 className="panel-hl">把AI死磕到底，<br />让效率超越极限</h2>
+              <h2 className="panel-hl">立足内容，<br />助力生意增长</h2>
               <p className="panel-sl">
-                从零打造AIGC全链路画布
-                <br />用AI技术将数小时创作提效至分钟级
+                懂内容，懂生意，懂用户
+                <br />多平台打造爆款营销视频
               </p>
             </div>
             <div className="stickers">
@@ -462,10 +461,10 @@ export default function Who() {
 
           <section className="panel p3">
             <div className="panel-copy">
-              <h2 className="panel-hl">立足平台逻辑，<br />放眼商业转化</h2>
+              <h2 className="panel-hl">把AI死磕到底，<br />让效率超越极限</h2>
               <p className="panel-sl">
-                吃透不同平台网感
-                <br />曾操盘单条斩获20万+互动的圈层爆款
+                从零打造AIGC全链路提效工具
+                <br />用AI技术将内容生产效率提升80%
               </p>
             </div>
             <div className="stickers">

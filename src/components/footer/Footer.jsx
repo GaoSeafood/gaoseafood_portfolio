@@ -284,8 +284,7 @@ export default function Footer() {
       <div className="footer-inner container">
         <div className="cta-left">
           <h2 className="cta-title">
-            把创意变成能落地的
-            <span className="underline">视觉故事</span>
+            用内容助力<span className="underline">生意增长</span>，<br />用AI助力<span className="underline">降本增效</span>
           </h2>
           <p className="meta">Based in Shanghai</p>
         </div>
