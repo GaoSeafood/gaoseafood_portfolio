@@ -40,6 +40,32 @@
   font-size: clamp(14px, 2.1vw, 18px);
   opacity: 0.9;
 }
+.pf-hd-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  margin-bottom: 8px;
+  padding: 5px 10px;
+  border-radius: 6px;
+  font-size: 11px;
+  font-weight: 600;
+  color: rgba(255,255,255,0.75);
+  background: rgba(255,255,255,0.08);
+  border: 1px solid rgba(255,255,255,0.14);
+  text-decoration: none;
+  pointer-events: auto;
+  transition: background 0.2s, border-color 0.2s, color 0.2s;
+  width: fit-content;
+}
+.pf-hd-btn:hover {
+  background: rgba(255,255,255,0.14);
+  border-color: rgba(255,255,255,0.3);
+  color: #fff;
+}
+.pf-hd-btn svg {
+  flex-shrink: 0;
+  opacity: 0.8;
+}
 
 .pf-stage {
   position: relative;

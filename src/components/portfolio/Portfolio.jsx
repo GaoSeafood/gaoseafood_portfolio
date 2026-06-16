@@ -416,6 +416,12 @@ export default function Portfolio() {
     return () => observer.disconnect();
   }, []);
 
+  useEffect(() => {
+    const videos = stageRef.current?.querySelectorAll("video");
+    if (!videos) return;
+    videos.forEach((v) => v.pause());
+  }, [currentIdx]);
+
   useLayoutEffect(() => {
     const root = rootRef.current;
     const stage = stageRef.current;
@@ -644,6 +650,19 @@ export default function Portfolio() {
               </div>
 
               <div className="pf-card-bottom">
+                {p.video && (
+                  <a
+                    className="pf-hd-btn"
+                    href="https://pan.baidu.com/s/1PlJvxzfa-6wbZgfbAc4Uhg?pwd=5ify"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                      <circle cx="12" cy="12" r="10"/><path d="M8 12l4 4 4-4"/><path d="M12 8v8"/>
+                    </svg>
+                    网盘链接
+                  </a>
+                )}
                 <div className="pf-actions">
                   {p.link && (
                     <a
