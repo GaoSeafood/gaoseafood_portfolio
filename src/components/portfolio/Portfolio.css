@@ -364,12 +364,12 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  background: rgba(0,0,0,0.25);
   border: none;
   cursor: pointer;
   border-radius: 10px;
-  transition: background 0.2s;
+  background: rgba(0,0,0,0.25);
   z-index: 2;
+  transition: background 0.2s;
 }
 .pf-video-play-overlay:hover {
   background: rgba(0,0,0,0.35);
@@ -796,4 +796,62 @@ a.pf-channel-link {
 @keyframes hintBounce {
   0%, 100% { transform: translateY(0); }
   50% { transform: translateY(6px); }
+}
+
+/* =========================
+   CARD ARROW BUTTONS
+   ========================= */
+.pf-arrows {
+  position: fixed;
+  right: clamp(16px, 3vw, 32px);
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 9;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  animation: pf-arrows-in 0.35s ease;
+}
+@keyframes pf-arrows-in {
+  from { opacity: 0; transform: translateY(-50%) translateX(8px); }
+  to { opacity: 1; transform: translateY(-50%) translateX(0); }
+}
+.pf-arrow {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  border: 1px solid rgba(255,255,255,0.18);
+  background: rgba(255,255,255,0.08);
+  color: rgba(255,255,255,0.7);
+  cursor: pointer;
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  transition: background 0.2s, color 0.2s, border-color 0.2s, transform 0.15s;
+}
+.pf-arrow:hover:not(:disabled) {
+  background: rgba(255,255,255,0.18);
+  color: #fff;
+  border-color: rgba(255,255,255,0.35);
+  transform: scale(1.08);
+}
+.pf-arrow:disabled {
+  opacity: 0.25;
+  cursor: default;
+}
+@media (max-width: 767px) {
+  .pf-arrows {
+    right: clamp(8px, 2vw, 14px);
+    gap: 6px;
+  }
+  .pf-arrow {
+    width: 34px;
+    height: 34px;
+  }
+  .pf-arrow svg {
+    width: 16px;
+    height: 16px;
+  }
 }

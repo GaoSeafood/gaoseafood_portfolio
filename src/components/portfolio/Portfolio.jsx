@@ -3,19 +3,19 @@ import { createPortal } from "react-dom";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import "./Portfolio.css";
-import tuhu1Icon from "../../assets/tuhu1.png";
-import tuhu2Icon from "../../assets/tuhu2.png";
-import meituanIcon from "../../assets/meituan.png";
-import wenhuaIcon from "../../assets/wenhua.png";
-import aiVideoIcon from "../../assets/ai-video.png";
-import tool1Icon from "../../assets/tool1.png";
-import tool2Icon from "../../assets/tool2.png";
-import tool3Icon from "../../assets/tool3.png";
-import tool4Icon from "../../assets/tool4.png";
-import caibeikeIcon from "../../assets/caibeike.png";
-import caibeike1 from "../../assets/caibeike-1.png";
-import caibeike2 from "../../assets/caibeike-2.png";
-import aiWorkflow from "../../assets/ai-workflow.png";
+import tuhu1Icon from "../../assets/tuhu1.webp";
+import tuhu2Icon from "../../assets/tuhu2.webp";
+import meituanIcon from "../../assets/meituan.webp";
+import wenhuaIcon from "../../assets/wenhua.webp";
+import aiVideoIcon from "../../assets/ai-video.webp";
+import tool1Icon from "../../assets/tool1.webp";
+import tool2Icon from "../../assets/tool2.webp";
+import tool3Icon from "../../assets/tool3.webp";
+import tool4Icon from "../../assets/tool4.webp";
+import caibeikeIcon from "../../assets/caibeike.webp";
+import caibeike1 from "../../assets/caibeike-1.webp";
+import caibeike2 from "../../assets/caibeike-2.webp";
+import aiWorkflow from "../../assets/ai-workflow.webp";
 
 gsap.registerPlugin(ScrollTrigger);
 ScrollTrigger.config({ ignoreMobileResize: true });
@@ -368,8 +368,6 @@ export default function Portfolio() {
   const navTimerRef = useRef(null);
   const frontRef = useRef(0);
   const stRef = useRef(null);
-  const cooldownRef = useRef(false);
-  const cooldownTimerRef = useRef(null);
 
   const showNav = useCallback(() => {
     if (!inPortfolio) return;
@@ -384,7 +382,7 @@ export default function Portfolio() {
     if (!st || !stage) return;
     const H = stage.clientHeight;
     const target = st.start + idx * H * PIN_FACTOR;
-    window.scroll(0, target);
+    window.scrollTo({ top: target, behavior: "smooth" });
     setNavVisible(false);
     clearTimeout(navTimerRef.current);
   }, []);
@@ -401,47 +399,6 @@ export default function Portfolio() {
   }, [showNav]);
 
   useEffect(() => {
-    const stage = stageRef.current;
-    if (!stage) return;
-
-    const handleWheel = (e) => {
-      if (!inPortfolio) return;
-      if (cooldownRef.current) { e.preventDefault(); return; }
-
-      const st = stRef.current;
-      if (!st) return;
-      const H = stage.clientHeight;
-      const step = H * PIN_FACTOR;
-
-      const dir = e.deltaY > 0 ? 1 : -1;
-      if (dir > 0 && frontRef.current >= PROJECTS.length - 1) return;
-      if (dir < 0 && frontRef.current <= 0) return;
-      if (window.scrollY < st.start - H * 0.2 || window.scrollY > st.end + H * 0.2) return;
-      const entryEnd = st.start + step * 0.25;
-      if (dir > 0 && window.scrollY < entryEnd) return;
-
-      e.preventDefault();
-      showNav();
-
-      cooldownRef.current = true;
-      clearTimeout(cooldownTimerRef.current);
-      cooldownTimerRef.current = setTimeout(() => { cooldownRef.current = false; }, 800);
-
-      const newIdx = frontRef.current + dir;
-      frontRef.current = newIdx;
-      setCurrentIdx(newIdx);
-      window.scroll(0, st.start + newIdx * step);
-    };
-
-    window.addEventListener("wheel", handleWheel, { passive: false });
-    return () => {
-      window.removeEventListener("wheel", handleWheel);
-      clearTimeout(cooldownTimerRef.current);
-      cooldownRef.current = false;
-    };
-  }, [inPortfolio, showNav]);
-
-  useEffect(() => {
     const el = rootRef.current;
     if (!el) return;
     const observer = new IntersectionObserver(
@@ -451,6 +408,22 @@ export default function Portfolio() {
     observer.observe(el);
     return () => observer.disconnect();
   }, []);
+
+  // 键盘方向键切换卡片
+  useEffect(() => {
+    if (!inPortfolio) return;
+    const onKey = (e) => {
+      if (e.key === "ArrowDown") {
+        e.preventDefault();
+        scrollToCard(Math.min(PROJECTS.length - 1, currentIdx + 1));
+      } else if (e.key === "ArrowUp") {
+        e.preventDefault();
+        scrollToCard(Math.max(0, currentIdx - 1));
+      }
+    };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [inPortfolio, currentIdx, scrollToCard]);
 
   useEffect(() => {
     const videos = stageRef.current?.querySelectorAll("video");
@@ -514,6 +487,7 @@ export default function Portfolio() {
           const LAYER = mq.conditions.mobile ? 18 : LAYER_OFFSET;
 
           cards.forEach((card, i) => {
+            const isFront = i === 0;
             gsap.set(card, {
               y: i * LAYER,
               scale: 1 - i * SCALE_STEP,
@@ -521,6 +495,7 @@ export default function Portfolio() {
               rotateX: 0,
               rotateZ: 0,
               z: 0.01,
+              opacity: isFront ? 1 : 0.7,
               transformOrigin: "50% 100%",
               force3D: true,
               backfaceVisibility: "hidden",
@@ -535,6 +510,7 @@ export default function Portfolio() {
           function setFront(idx) {
             cards.forEach((card, i) => {
               card.classList.toggle("is-front", i === idx);
+              card.style.zIndex = i === idx ? cards.length + 1 : cards.length - i;
             });
           }
           setFront(0);
@@ -543,20 +519,27 @@ export default function Portfolio() {
 
           const tl = gsap.timeline({
             defaults: { ease: "none" },
-            scrollTrigger: {
-              trigger: stage,
-              pin: stage,
-              pinReparent: true,
-              start: "top top",
-              end: () => "+=" + (cards.length - 1) * H() * PIN_FACTOR,
-              scrub: 0.6,
-              anticipatePin: mq.conditions.mobile ? 2 : 1,
-              invalidateOnRefresh: true,
-              snap: {
-                snapTo: (v) => Math.round(v * (cards.length - 1)) / (cards.length - 1),
-                duration: 0.2,
+              scrollTrigger: {
+                trigger: stage,
+                pin: stage,
+                start: "top top",
+                end: () => "+=" + (cards.length - 1) * H() * PIN_FACTOR,
+                scrub: 0.6,
+                anticipatePin: mq.conditions.mobile ? 2 : 1,
+                invalidateOnRefresh: true,
+                snap: {
+                  snapTo: (value) => {
+                    const totalDuration = cards.length - 1;
+                    const rawPos = value * totalDuration;
+                    const bias = rawPos < 0.65 ? 0.15 : 0; // gravity well for card 0
+                    const snapped = Math.max(0, Math.min(totalDuration, Math.round(rawPos - bias)));
+                    return snapped / totalDuration;
+                  },
+                  duration: { min: 0.2, max: 0.5 },
+                  delay: 0.05,
+                  ease: "power2.out",
+                },
               },
-            },
             onUpdate: () => {
               const newFront = Math.min(
                 cards.length - 1,
@@ -745,6 +728,30 @@ export default function Portfolio() {
         ))}
       </div>
       <div className="pf-nav-zone" onMouseEnter={() => showNav()} />
+      {inPortfolio && (
+        <div className="pf-arrows">
+          <button
+            className="pf-arrow pf-arrow-up"
+            onClick={() => scrollToCard(Math.max(0, currentIdx - 1))}
+            disabled={currentIdx === 0}
+            aria-label="上一张"
+          >
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M18 15l-6-6-6 6"/>
+            </svg>
+          </button>
+          <button
+            className="pf-arrow pf-arrow-down"
+            onClick={() => scrollToCard(Math.min(PROJECTS.length - 1, currentIdx + 1))}
+            disabled={currentIdx === PROJECTS.length - 1}
+            aria-label="下一张"
+          >
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M6 9l6 6 6-6"/>
+            </svg>
+          </button>
+        </div>
+      )}
       <CardNav
         currentIdx={currentIdx}
         titles={PROJECTS.map((p) => p.title)}

@@ -3,13 +3,13 @@ import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import "./Who.css";
 import claude from "../../assets/claude.svg";
-import robot from "../../assets/robot.png";
-import tiktok from "../../assets/抖音.png";
-import jimeng from "../../assets/即梦.png";
+import robot from "../../assets/robot.webp";
+import tiktok from "../../assets/抖音.webp";
+import jimeng from "../../assets/即梦.webp";
 import openai from "../../assets/openai.svg";
-import aftereffects from "../../assets/AfterEffect.png";
-import capcut from "../../assets/剪映.png";
-import orientalpearl from "../../assets/东方明珠.png";
+import aftereffects from "../../assets/AfterEffect.webp";
+import capcut from "../../assets/剪映.webp";
+import orientalpearl from "../../assets/东方明珠.webp";
 
 gsap.registerPlugin(ScrollTrigger);
 if (ScrollTrigger.isTouch) {
