@@ -299,6 +299,42 @@ function SwipeableCarousel({ items, type = "image" }) {
   );
 }
 
+/* ---------- LAZY VIDEO ---------- */
+function LazyVideo({ src, poster }) {
+  const videoRef = useRef(null);
+  const [loaded, setLoaded] = useState(false);
+
+  const handlePlay = () => {
+    const v = videoRef.current;
+    if (!v || loaded) return;
+    v.src = src;
+    v.load();
+    setLoaded(true);
+    v.play().catch(() => {});
+  };
+
+  return (
+    <div className="pf-video-wrap">
+      <video
+        ref={videoRef}
+        className="pf-video"
+        controls={loaded}
+        playsInline
+        preload="none"
+        poster={poster}
+        onClick={!loaded ? handlePlay : undefined}
+      />
+      {!loaded && (
+        <button className="pf-video-play-overlay" onClick={handlePlay} aria-label="播放视频">
+          <svg width="48" height="48" viewBox="0 0 24 24" fill="rgba(255,255,255,0.92)">
+            <path d="M8 5v14l11-7z"/>
+          </svg>
+        </button>
+      )}
+    </div>
+  );
+}
+
 /* ---------- CARD NAVIGATOR ---------- */
 function CardNav({ currentIdx, titles, onSelect, visible }) {
   const [hovered, setHovered] = useState(null);
@@ -687,16 +723,10 @@ export default function Portfolio() {
 
             {p.video && (
               <div className="pf-card-col pf-card-right">
-                <div className="pf-video-wrap">
-                  <video
-                    className="pf-video"
-                    src={p.video}
-                    controls
-                    playsInline
-                    preload="metadata"
-                    poster=""
-                  />
-                </div>
+                <LazyVideo
+                  src={p.video}
+                  poster={p.video.replace("/videos/", "/posters/").replace(".mp4", ".jpg")}
+                />
               </div>
             )}
 
